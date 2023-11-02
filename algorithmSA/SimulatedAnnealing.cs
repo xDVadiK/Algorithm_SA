@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.AxHost;
 
 namespace algorithmSA
 {
@@ -22,6 +19,14 @@ namespace algorithmSA
             this.matrix = new AdjacencyMatrix(matrix);
         }
 
+        internal AdjacencyMatrix AdjacencyMatrix
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         public long GetShortestCycleDistance()
         {
             return shortestCycleDistanse;
@@ -38,12 +43,12 @@ namespace algorithmSA
             return sb.ToString();
         }
 
-        // Поиск кратчайшего гамельтонова пути с помощью алгоритма имитации отжига
+        // Search for the shortest Hamiltonian path using an annealing simulation algorithm
         public void FindShortestHamiltonianСycle() 
         {
-            // Задание начального решения 
+            // Setting the initial solution
             int[] currentCycle = Enumerable.Range(0, matrix.GetSize()).ToArray();
-            // Определение длины пути начального решения 
+            // Determining the path length of the initial solution 
             long distance = GetNewCycleDistanse(currentCycle);
             while (temperature > 0)
             {
@@ -65,7 +70,7 @@ namespace algorithmSA
             shortestCycle = currentCycle;
         }
 
-        // Модифицирование решения случайным образом
+        // Modifying the solution randomly
         private int[] GetNewCycle(int[] currentRoute) 
         {
             int[] route = new int[currentRoute.Length];
@@ -83,7 +88,7 @@ namespace algorithmSA
             return route;
         }
 
-        // Вычисление энергии (длины пути) полученного состояния
+        // Calculation of energy (path length) of the obtained state
         private long GetNewCycleDistanse(int[] route) 
         {
             long distance = 0;
@@ -95,10 +100,10 @@ namespace algorithmSA
             return distance;
         }
 
-        // Определение вероятности принятия нового состояния
+        // Determining the probability of adopting a new state
         private bool GetProbabilityAcceptingNewState(long energyNewState) 
         {
-            double k = 1.38e-23; // Постоянная Больцмана
+            double k = 1.38e-23; // Boltzmann constant
             Random random = new Random();
             return Math.Exp(-energyNewState / (temperature * k)) > random.NextDouble();
         }
